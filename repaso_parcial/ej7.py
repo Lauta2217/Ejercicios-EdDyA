@@ -106,5 +106,5 @@ if __name__ == '__main__':
     C1 = Cola()
     C2 = Cola()
     C3 = Cola()
-    banco = Banco(C1,C2,C3,19)
+    banco = Banco(C1,C2,C3,10)
     banco.atender()
