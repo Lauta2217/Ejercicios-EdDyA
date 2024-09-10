@@ -38,3 +38,10 @@ class Pila:
     def __str__(self):
         return str(self.items)
 
+pila = Pila(3)
+pila.insertar(1)
+pila.insertar(2)
+pila.insertar(3)
+print(f"tope:{pila.obtener_tope()}")
+pila.suprimir()
+pila.mostrar()
