@@ -112,21 +112,22 @@ class Arbol_binario_busqueda:
         return band
     
     def hijo(self,hijo,supuesto_padre,actual):
+        band = False
         if actual is None:
-            return False
+            band = False
         if supuesto_padre == actual.get_value():
             print("viendo si tiene pendejos")
             if actual.get_left() is not None:
                 if actual.get_left().get_value() == hijo:
-                    return True
+                    band = True
             elif actual.get_right() is not None:
                 if actual.get_right().get_value() == hijo:
-                    return True
+                    band = True
         elif actual.get_value() > supuesto_padre:
-            return self.hijo(hijo,supuesto_padre,actual.get_left())
+             self.hijo(hijo,supuesto_padre,actual.get_left())
         else:
-            return self.hijo(hijo,supuesto_padre,actual.get_right())
-    
+             self.hijo(hijo,supuesto_padre,actual.get_right())
+        return band
     def camino(self,inicio,fin,actual,band = False,camino = []): #se puede usar la funcion buscar, pero en el parcial hay que definirla tambien
         if actual is None:
             return None
