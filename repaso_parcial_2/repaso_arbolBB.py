@@ -134,11 +134,13 @@ class Arbol_binario_busqueda:
         if actual.get_value() == inicio or band:
             band = True
             camino.append(actual.get_value())     
-            if actual.get_value()>=fin:
+            if actual.get_value() == fin:
+                return
+            elif actual.get_value()>fin:
                 self.camino(inicio,fin,actual.get_left(),band,camino)
             else:
                 self.camino(inicio,fin,actual.get_right(),band,camino)
-        elif actual.get_value()>=inicio:
+        elif actual.get_value()>inicio:
             self.camino(inicio,fin,actual.get_left())
         else:
             self.camino(inicio,fin,actual.get_right())
@@ -232,8 +234,8 @@ if __name__ == '__main__':
             50 es padre de 5?:{arbol.hijo(50,5,arbol.get_raiz())}
             50 es padre de 30?:{arbol.hijo(30,50,arbol.get_raiz())}
             """)
-    camino = arbol.camino(50,5,arbol.get_raiz())
-    print(f"camino de {50} a {5}")
+    camino = arbol.camino(50,10,arbol.get_raiz())
+    print(f"camino de {50} a {10}")
     if camino is not None:
         for valor in camino:
             print(valor,end=" ")
