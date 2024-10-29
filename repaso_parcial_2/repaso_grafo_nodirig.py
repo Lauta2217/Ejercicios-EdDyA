@@ -37,24 +37,20 @@ class Grafo:
                         pila.append((adyacente, camino + [adyacente]))
 
     def conexo(self):
-        i = 0
-        j = 0
-        band = True
-        while i < self.__cant_nodos and band:
-            while j < self.__cant_nodos and band:
-                if self.camino(i,j) is None:
-                    band = False
-                else:
-                    j+=1
-            i+=1
-            j=0
-        if not band:
-            print("El grafo no es simple ni fuertemente conexo")
-        else:
-            print("Como es dirigido entonces existe ida y vuelta por lo tanto este grafo es fuertemente conexo\n")
+       visitados = [False] * self.__cant_nodos
+       pila = [0]
+       while pila:
+        vertice = pila.pop()
+        if not visitados[vertice]:
+            visitados[vertice] = True
+            for adyacente in self.adyacentes(vertice):
+                if not visitados[adyacente]:
+                    pila.append(adyacente)  
+       return all(visitados) 
+
             
     def aciclico(self):
-        """visitados = [False] * self.__cant_nodos
+        visitados = [False] * self.__cant_nodos
         for nodo in range(self.__cant_nodos):
             if not visitados[nodo]:  # Si no ha sido visitado
                 # Pila para DFS: contiene tuplas (nodo actual, nodo padre)
@@ -65,11 +61,12 @@ class Grafo:
                         visitados[actual] = True
                     # Revisar los vecinos del nodo actual
                     for adyacente in self.adyacentes(actual):
-                            if not visitados[adyacente]:  # Si el adyacente no ha sido visitado
-                                pila.append((adyacente, actual))  # Agregar a la pila con el nodo actual como padre
-                            elif adyacente != padre:  # Si es un adyacente visitado y no es el padre, hay un ciclo
-                                return False
-        return True  # No se detectaron ciclos"""
+                        if not visitados[adyacente]:  # Si el adyacente no ha sido visitado
+                            pila.append((adyacente, actual))  # Agregar a la pila con el nodo actual como padre
+                        elif adyacente != padre:  # Si es un adyacente visitado y no es el padre, hay un ciclo
+                            return False
+        return True  # No se detectaron ciclos
+
 
     def REA(self,v = 0): #Este es la busqueda de cantidad de caminos desde u a todos sus adyacentes en amplitud
         # Inicializamos las distancias como "infinito" (representado por un número grande)
@@ -133,7 +130,7 @@ class Grafo:
         print("]")
         
 if __name__ == '__main__':
-    grafo = Grafo(5) #siempre uno mas que el valor mas grande de las tuplas de los elementos a insertar
+    grafo = Grafo(7) #siempre uno mas que el valor mas grande de las tuplas de los elementos a insertar
     # Lista de conexiones para un grafo acíclico
     aristas_acyclicas = [
         (0, 1),
@@ -170,7 +167,7 @@ if __name__ == '__main__':
 ]
 
 
-    for u,v in aristas_acyclicas:
+    for u,v in lista_fuertemente_conexo:
         grafo.añadir_arista(u,v)
     """print("Intento de agregar una posicion no existente\n")
     grafo.añadir_arista(5,6)
@@ -196,7 +193,10 @@ if __name__ == '__main__':
     print(d)
     print("Usando REP (busqueda en amplitud)\n")
     grafo.REP_iterativo()
-    grafo.conexo()
+    if grafo.conexo():
+        print("conexo")
+    else:
+        print("disconexo")
     if grafo.aciclico():
         print("El grafo es aciclico\n")
     else:

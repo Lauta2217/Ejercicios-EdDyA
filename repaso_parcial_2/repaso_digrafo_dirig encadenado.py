@@ -59,46 +59,34 @@ class Digrafo_enc:
         return None
     
     def conexo(self):
-        """simple_conexo = True
-        fuertemente_conexo = True
-        i = 0
-        j = 0
-        while  i < self.__cant_nodos:
-            while j< self.__cant_nodos:
-                if self.camino(i,j) is None:
-                    simple_conexo = False
-                if self.camino(i,j) is None and self.camino(j,i) is None:
-                    fuertemente_conexo = False
-                j+=1
-            j=0
-            i+=1
-        if not simple_conexo:
-            print("el grafo no es simple conexo por lo tanto no es fuertemente conexo tampoco")
-        elif fuertemente_conexo :
-            print("El grafo es fuertemente conexo")
-        else:
-            print("El grafo no es ni fuertemente ni simple conexo")"""
+       visitados = [False] * self.__cant_nodos
+       pila = [0]
+       while pila:
+        vertice = pila.pop()
+        if not visitados[vertice]:
+            visitados[vertice] = True
+            for adyacente in self.adyacentes(vertice):
+                if not visitados[adyacente]:
+                    pila.append(adyacente)  
+       return all(visitados) 
             
     def aciclico(self):
-        """visitados = [False] * self.__cant_nodos
-        en_pila = [False] * self.__cant_nodos  # Pila de nodos actualmente en el camino
-        for nodo in range(self.__cant_nodos):  # Recorremos todos los nodos
-            if not visitados[nodo]:
-                stack = [(nodo, False)]  # Utilizamos una pila para la DFS
-                while stack:
-                    actual, retorno = stack.pop()
-                    if not retorno:  # Si no hemos regresado a este nodo
+        visitados = [False] * self.__cant_nodos
+        for nodo in range(self.__cant_nodos):
+            if not visitados[nodo]:  # Si no ha sido visitado
+                # Pila para DFS: contiene tuplas (nodo actual, nodo padre)
+                pila = [(nodo, -1)]
+                while pila:
+                    actual, padre = pila.pop()
+                    if not visitados[actual]:
                         visitados[actual] = True
-                        en_pila[actual] = True
-                        stack.append((actual, True))  # Marcar que estamos regresando
-                        for adyacente in self.adyacentes(actual):# Revisar adyacentes
-                            if not visitados[adyacente]:
-                                stack.append((adyacente, False))
-                            elif en_pila[adyacente]:  # Si el adyacente está en la pila, hay un ciclo
-                                return False
-                    else:  # Estamos regresando a este nodo
-                        en_pila[actual] = False  # Retiramos el nodo de la pila
-        return True  # No se detectaron ciclos"""
+                    # Revisar los vecinos del nodo actual
+                    for adyacente in self.adyacentes(actual):
+                        if not visitados[adyacente]:  # Si el adyacente no ha sido visitado
+                            pila.append((adyacente, actual))  # Agregar a la pila con el nodo actual como padre
+                        elif adyacente != padre:  # Si es un adyacente visitado y no es el padre, hay un ciclo
+                            return False
+        return True  # No se detectaron ciclos
     
     def REA(self,v = 0): #Este es la busqueda de cantidad de caminos desde u a todos sus adyacentes en amplitud
         # Inicializamos las distancias como "infinito" (representado por un número grande)
@@ -197,7 +185,16 @@ if __name__ == '__main__':
         (4, 5),  # Camino adicional de 4 a 5
         (8, 3),  # Conexión de 8 a 3 (para volver)
     ]
-    for u, v in lista:
+    aristas_acyclicas = [
+        (0, 1),
+        (0, 2),
+        (1, 3),
+        (1, 4),
+        (2, 5),
+        (5,6)
+        
+    ]
+    for u, v in aristas_acyclicas:
         digrafo.añadir_arista(u, v)
     
     print("Intento de agregar una posicion no existente\n")
@@ -224,14 +221,17 @@ if __name__ == '__main__':
     
     print("Usando REP iterativo (busqueda en profundidad)\n")
     digrafo.REP_iterativo()
-    print(f"Grado de salida:{digrafo.grau_sal(1)}\n")
-    print(f"Grado de entrada:{digrafo.grau_ent(0)}\n")
-    print(f""" pozo y fuente
-          0 fuente:  {digrafo.nodo_fonte(0)}
-          9 pozo: {digrafo.nodo_poço(9)}
+    #print(f"Grado de salida:{digrafo.grau_sal(1)}\n")
+    #print(f"Grado de entrada:{digrafo.grau_ent(0)}\n")
+    #print(f""" pozo y fuente
+     #     0 fuente:  {digrafo.nodo_fonte(0)}
+      #    9 pozo: {digrafo.nodo_poço(9)}
           
-          """)
-    digrafo.conexo()
+       #   """)
+    if digrafo.conexo():
+        print("conexo")
+    else:
+        print("disconexo")
     if digrafo.aciclico():
         print("aciclico")
     else:
