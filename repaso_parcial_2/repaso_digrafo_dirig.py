@@ -48,20 +48,29 @@ class Digrafo:
             
     def aciclico(self):
         visitados = [False] * self.__cant_nodos
+        padres = [-1] * self.__cant_nodos
         for nodo in range(self.__cant_nodos):
             if not visitados[nodo]:  # Si no ha sido visitado
                 # Pila para DFS: contiene tuplas (nodo actual, nodo padre)
                 pila = [(nodo, -1)]
                 while pila:
                     actual, padre = pila.pop()
+                    print(f" padre:{padre} actual: {actual} ")
+                    padres[actual] = padre
                     if not visitados[actual]:
                         visitados[actual] = True
                     # Revisar los vecinos del nodo actual
                     for adyacente in self.adyacentes(actual):
                         if not visitados[adyacente]:  # Si el adyacente no ha sido visitado
                             pila.append((adyacente, actual))  # Agregar a la pila con el nodo actual como padre
-                        elif adyacente != padre:  # Si es un adyacente visitado y no es el padre, hay un ciclo
-                            return False
+                        else: 
+                            while padre != -1:
+                                print(f"Adyacente:{adyacente} padre:{padre} actual: {actual} ")
+                                if padres[padre] == adyacente:
+                                    print(f"Adyacente:{adyacente} padre:{padre} actual: {actual} ")
+                                    return False
+                                else:
+                                    padre = padres[padre]
         return True  # No se detectaron ciclos
 
     def REA(self,v = 0): #Este es la busqueda de cantidad de caminos desde u a todos sus adyacentes en amplitud
@@ -144,7 +153,9 @@ class Digrafo:
             band = False
         return band
 if __name__ == '__main__':
-    digrafo = Digrafo(7)
+    digrafo = Digrafo(5)
+    aciclicoo = [(0, 1), (1, 2), (2, 3), (3, 4), (1, 4)]#aciclico
+    ciclico = [(0, 1), (1, 2), (2, 0), (3, 4), (4, 3),(2,3)]#ciclico
     lista = [
         (0, 1),  # Conexión de la fuente 0 a 1
         (0, 2),  # Conexión de la fuente 0 a 2
@@ -166,7 +177,9 @@ if __name__ == '__main__':
         (5,6)
         
     ]
-    for u, v in aristas_acyclicas:
+    adyacencia = [(0, 1), (1, 2), (2, 3), (3, 4), (0, 4)]
+
+    for u, v in adyacencia:
         digrafo.añadir_arista(u, v)
     
     print("Intento de agregar una posicion no existente\n")

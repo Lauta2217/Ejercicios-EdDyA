@@ -51,20 +51,29 @@ class Grafo:
             
     def aciclico(self):
         visitados = [False] * self.__cant_nodos
+        padres = [-1] * self.__cant_nodos
         for nodo in range(self.__cant_nodos):
             if not visitados[nodo]:  # Si no ha sido visitado
                 # Pila para DFS: contiene tuplas (nodo actual, nodo padre)
                 pila = [(nodo, -1)]
                 while pila:
                     actual, padre = pila.pop()
+                    print(f" padre:{padre} actual: {actual} ")
+                    padres[actual] = padre
                     if not visitados[actual]:
                         visitados[actual] = True
                     # Revisar los vecinos del nodo actual
                     for adyacente in self.adyacentes(actual):
                         if not visitados[adyacente]:  # Si el adyacente no ha sido visitado
                             pila.append((adyacente, actual))  # Agregar a la pila con el nodo actual como padre
-                        elif adyacente != padre:  # Si es un adyacente visitado y no es el padre, hay un ciclo
-                            return False
+                        else: 
+                            while padre != -1:
+                                print(f"Adyacente:{adyacente} padre:{padre} actual: {actual} ")
+                                if padres[padre] == adyacente:
+                                    print(f"Adyacente:{adyacente} padre:{padre} actual: {actual} ")
+                                    return False
+                                else:
+                                    padre = padres[padre]
         return True  # No se detectaron ciclos
 
 

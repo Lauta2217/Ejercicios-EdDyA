@@ -18,6 +18,13 @@ class Nodo:
         self.__derecha = derc
     def set_value(self,value):
         self.__valor = value
+    def grau(self):
+        if self.__izquierda is not None and self.__derecha is not None:
+            return 2
+        elif self.__izquierda is None and self.__derecha is None:
+            return 0
+        else:
+            return 1
 
 class Arbol_binario_busqueda:
     __raiz: object
@@ -182,6 +189,15 @@ class Arbol_binario_busqueda:
             self.sucesores(valor,actual.get_left()) # y nos fuimos a la izquierda
         else: #si el actual es menor tonce me voy la derecha
             self.sucesores(valor,actual.get_right()) # y nos fuimos a la derecha
+    def grado(self,valor,actual):
+        if actual is not None:
+            if actual.get_value() == valor:
+                print(f"grado del valor {valor}: {actual.grau()}")
+            elif actual.get_value() > valor:
+                self.grado(valor,actual.get_left())
+            else:
+                self.grado(valor,actual.get_right())
+        return
      # Recorrido In-orden
     def inorden(self, nodo_actual): #se ocupa en todo
         if nodo_actual is not None: #si actual no es none tonce muestro
@@ -202,7 +218,7 @@ class Arbol_binario_busqueda:
             print(nodo_actual.get_value(), end=" ") # los printeo
 if __name__ == '__main__':
     arbol = Arbol_binario_busqueda()
-    valores = [50,30,70,20,40,60,80,10,5]
+    valores = [50,30,70,20,40,60,80,10,5,4]
     for valor in valores:
         arbol.insertar(valor,arbol.get_raiz())
     print(f"""
@@ -236,8 +252,10 @@ if __name__ == '__main__':
         for valor in camino:
             print(valor,end=" ")
         print()
+        camino = []
     else:
         print("No existe")
+    
     arbol.padre_y_hermano(30,arbol.get_raiz())
     print(f"Cantidad de nodos: {arbol.cantidad_nodos(arbol.get_raiz())}")
     print(f"Altura del arbol {arbol.altura(arbol.get_raiz())}")
@@ -247,4 +265,6 @@ if __name__ == '__main__':
     print("eliminando el nodo 40")
     arbol.eliminar(40,arbol.get_raiz())
     arbol.inorden(arbol.get_raiz())
-    
+    print()
+    arbol.grado(50,arbol.get_raiz())
+    arbol.grado(5,arbol.get_raiz())    
