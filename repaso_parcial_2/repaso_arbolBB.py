@@ -152,9 +152,9 @@ class Arbol_binario_busqueda:
         else:
             return None #retorno None
         if fin in camino: #si esta el fin en el camino tonce lo encontró
-            return camino
+             print(camino)
         else: #no hay camino
-            return None
+            print("No existe")
         
     def altura(self,actual):
         if actual is not  None: #si actual es none retorno 0
@@ -178,10 +178,10 @@ class Arbol_binario_busqueda:
             return None
              
     def cantidad_nodos(self,actual): #se puede hacer con inorden
-        if actual is not None: #si actual es none tonce retornamos 0
-            cant =  1 + self.cantidad_nodos(actual.get_left()) + self.cantidad_nodos(actual.get_right()) #la cantida de nos es 1(raiz) + la cantidad de nodos para la izquierda de la raiz + la cantidad de nodos para la derecha de la raiz
-        else:
+        if actual is None: #si actual es none tonce retornamos 0
             cant = 0
+        else:
+            cant =  1 + self.cantidad_nodos(actual.get_left()) + self.cantidad_nodos(actual.get_right()) #la cantida de nodos es 1(actual) + la cantidad de nodos para la izquierda del actual + la cantidad de nodos para la derecha del actual
         return cant #retorno cant
     
     def sucesores(self,valor,actual):
@@ -204,8 +204,16 @@ class Arbol_binario_busqueda:
             else:
                 self.grado(valor,actual.get_right())
         return
+    def cont_sucesores(self,valor,actual):
+        if actual is not None:
+            if actual.get_value() == valor:
+               print(f"cantidad de sucesores de {valor}: {self.cantidad_nodos(actual)-1}")
+            elif actual.get_value() > valor:
+                self.cont_sucesores(valor,actual.get_left())
+            else:
+                self.cont_sucesores(valor,actual.get_right())
+
      # Recorrido In-orden
-            
     def inorden(self, nodo_actual): #se ocupa en todo
         if nodo_actual is not None: #si actual no es none tonce muestro
             self.inorden(nodo_actual.get_left()) #nodos a su izquierda
@@ -225,7 +233,7 @@ class Arbol_binario_busqueda:
             print(nodo_actual.get_value(), end=" ") # los printeo
 if __name__ == '__main__':
     arbol = Arbol_binario_busqueda()
-    valores = [50,30,70,20,40,60,80,10,5,4]
+    valores = [50,30,70,20,40,60,80,10,5,4,3]
     for valor in valores:
         arbol.insertar(valor,arbol.get_raiz())
     print(f"""
@@ -253,8 +261,8 @@ if __name__ == '__main__':
             50 es padre de 5?:{arbol.hijo(50,5,arbol.get_raiz())}
             50 es padre de 30?:{arbol.hijo(30,50,arbol.get_raiz())}
             """)
-    camino = arbol.camino(50,70,arbol.get_raiz())
-    print(f"camino de {50} a {70}")
+    camino = arbol.camino(50,5,arbol.get_raiz())
+    print(f"camino de {50} a {5}")
     if camino is not None:
         for valor in camino:
             print(valor,end=" ")
@@ -275,3 +283,4 @@ if __name__ == '__main__':
     print()
     arbol.grado(50,arbol.get_raiz())
     arbol.grado(5,arbol.get_raiz())    
+    arbol.cont_sucesores(30,arbol.get_raiz())
